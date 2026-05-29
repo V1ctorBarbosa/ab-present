@@ -1,0 +1,863 @@
+/* ============================================================
+   .level — container empilhado, só um visível por vez
+   ============================================================ */
+.level {
+  position: absolute;
+  inset: 0;
+  padding: clamp(2.5rem, 8vh, 5rem) var(--space-md) var(--space-md);
+  display: flex;
+  /* conteúdo ancorado no topo — header fica fixo, só o que está
+     abaixo dança quando cartas/mensagens entram e saem */
+  align-items: flex-start;
+  justify-content: center;
+  overflow-y: auto;
+
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(28px) scale(0.985);
+
+  transition:
+    opacity var(--duration-xslow) var(--ease-soft),
+    transform var(--duration-xslow) var(--ease-soft),
+    visibility 0s linear var(--duration-xslow);
+  pointer-events: none;
+}
+
+.level.is-active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+  transition:
+    opacity var(--duration-xslow) var(--ease-soft),
+    transform var(--duration-xslow) var(--ease-soft),
+    visibility 0s linear 0s;
+}
+
+.level.is-exiting {
+  opacity: 0;
+  visibility: visible;
+  transform: translateY(-28px) scale(0.985);
+  transition:
+    opacity var(--duration-slow) var(--ease-soft),
+    transform var(--duration-slow) var(--ease-soft);
+}
+
+/* ============================================================
+   .level__inner — coluna centralizada
+   ============================================================ */
+.level__inner {
+  width: 100%;
+  max-width: 580px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-md);
+}
+
+/* variante mais larga — útil pra grids de cards, galerias, etc */
+.level__inner--wide {
+  max-width: 880px;
+}
+
+.level__actions {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: var(--space-xs);
+}
+
+/* ============================================================
+   entrada escalonada — disparada quando .is-active é adicionada
+   ============================================================ */
+.level__inner > * {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity var(--duration-xslow) var(--ease-soft),
+    transform var(--duration-xslow) var(--ease-soft);
+}
+
+.level.is-active .level__inner > *:nth-child(1) { transition-delay: 0.35s; }
+.level.is-active .level__inner > *:nth-child(2) { transition-delay: 0.70s; }
+.level.is-active .level__inner > *:nth-child(3) { transition-delay: 1.05s; }
+.level.is-active .level__inner > *:nth-child(4) { transition-delay: 1.40s; }
+.level.is-active .level__inner > *:nth-child(5) { transition-delay: 1.75s; }
+.level.is-active .level__inner > *:nth-child(n+6) { transition-delay: 2.05s; }
+
+.level.is-active .level__inner > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* saída — todos os filhos desaparecem juntos, sem delays */
+.level.is-exiting .level__inner > * {
+  transition-delay: 0s;
+  transition-duration: var(--duration-slow);
+  opacity: 0;
+  transform: translateY(-12px);
+}
+
+/* ============================================================
+   tipografia de corpo dentro de níveis
+   ============================================================ */
+
+/* parágrafo de corpo — texto reflexivo / poético */
+.level__paragraph {
+  font-family: var(--font-serif);
+  font-size: clamp(1.15rem, 3vw, 1.5rem);
+  font-weight: 400;
+  color: var(--color-ink);
+  line-height: 1.7;
+  max-width: 44ch;
+  text-wrap: pretty;
+}
+
+/* ============================================================
+   utilitários reutilizáveis pra futuros níveis
+   ============================================================ */
+
+/* imagem com moldura suave (uso típico: fotos da Bia) */
+.photo {
+  display: block;
+  max-width: 100%;
+  border-radius: var(--radius-lg);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.6) inset,
+    0 10px 30px -12px rgba(74, 58, 58, 0.35),
+    0 2px 8px -4px rgba(74, 58, 58, 0.2);
+  background: var(--color-surface);
+  padding: 8px;
+  transform: rotate(var(--photo-tilt, 0deg));
+  transition: transform var(--duration-base) var(--ease-soft);
+}
+.photo:hover {
+  transform: rotate(0deg) scale(1.02);
+}
+
+/* texto manuscrito decorativo */
+.script {
+  font-family: var(--font-script);
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  color: var(--color-accent);
+  line-height: 1.2;
+}
+
+/* card translúcido (uso típico: lista, conteúdo agrupado) */
+.card {
+  background: rgba(255, 248, 243, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(176, 133, 133, 0.18);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  box-shadow: 0 8px 24px -16px rgba(74, 58, 58, 0.35);
+}
+
+/* divisor ornamental (florzinha entre seções) */
+.divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  color: var(--color-accent);
+  opacity: 0.7;
+}
+.divider::before,
+.divider::after {
+  content: "";
+  height: 1px;
+  flex: 1;
+  max-width: 80px;
+  background: linear-gradient(
+    to var(--dir, right),
+    transparent,
+    var(--color-accent)
+  );
+}
+.divider::after { --dir: left; }
+
+/* ============================================================
+   quiz (nível 2) — grid de adjetivos
+   ============================================================ */
+
+.quiz-feedback {
+  font-family: var(--font-script);
+  font-size: clamp(1.4rem, 4vw, 1.9rem);
+  color: var(--color-accent);
+  height: 1.8em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  pointer-events: none;
+}
+/* o estado visível usa duas camadas: a do .level__inner > * (entrada)
+   e a interna controlada por .is-visible */
+.quiz-feedback .quiz-feedback__text {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(-6px) scale(0.98);
+  transition:
+    opacity var(--duration-base) var(--ease-soft),
+    transform var(--duration-base) var(--ease-soft);
+}
+.quiz-feedback.is-visible .quiz-feedback__text {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* mensagem final — maior, mais cerimônia */
+.quiz-feedback.is-final {
+  font-size: clamp(1.8rem, 5.5vw, 2.8rem);
+  height: auto;
+  min-height: 2.4em;
+  margin-top: var(--space-sm);
+  color: var(--color-accent);
+}
+.quiz-feedback.is-final .quiz-feedback__text {
+  transition:
+    opacity var(--duration-slow) var(--ease-soft),
+    transform var(--duration-slow) var(--ease-soft);
+}
+
+.quiz-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-sm);
+  width: 100%;
+}
+
+.quiz-card {
+  flex: 0 0 auto;
+  width: clamp(125px, 26vw, 165px);
+
+  font-family: var(--font-serif);
+  font-size: clamp(1rem, 2.4vw, 1.2rem);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--color-ink);
+  text-align: center;
+  word-break: break-word;
+  hyphens: auto;
+
+  padding: 0.95rem 1.1rem;
+  min-height: 52px;
+
+  background: rgba(255, 248, 243, 0.72);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(176, 133, 133, 0.25);
+  border-radius: var(--radius);
+
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+
+  box-shadow: 0 2px 10px -8px rgba(74, 58, 58, 0.3);
+  transition:
+    transform var(--duration-fast) var(--ease-soft-out),
+    background var(--duration-base) var(--ease-soft),
+    border-color var(--duration-base) var(--ease-soft),
+    box-shadow var(--duration-base) var(--ease-soft),
+    color var(--duration-base) var(--ease-soft);
+}
+
+.quiz-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-accent);
+  background: var(--color-cream);
+  box-shadow: 0 8px 20px -10px rgba(176, 133, 133, 0.5);
+}
+.quiz-card:active {
+  transform: translateY(0);
+  transition-duration: 80ms;
+}
+.quiz-card:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+/* entrada escalonada dos cards — disparada quando o nível ativa.
+   --i é setado pelo JS em cada card (0..N-1). */
+.level--quiz .quiz-card {
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity var(--duration-base) var(--ease-soft),
+    transform var(--duration-base) var(--ease-soft),
+    background var(--duration-base) var(--ease-soft),
+    border-color var(--duration-base) var(--ease-soft),
+    box-shadow var(--duration-base) var(--ease-soft);
+}
+.level--quiz.is-active .quiz-card {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: calc(var(--i, 0) * 35ms + 1900ms);
+}
+.level--quiz.is-active .quiz-card:hover {
+  transition-delay: 0s;
+}
+
+/* estado: selecionado (certo) — fica aceso e não responde mais */
+.quiz-card.is-selected {
+  background: linear-gradient(135deg, var(--color-peach), var(--color-rose));
+  border-color: transparent;
+  color: var(--color-ink);
+  pointer-events: none;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.55) inset,
+    0 8px 26px -10px rgba(230, 196, 192, 0.7),
+    0 0 26px -6px rgba(240, 210, 187, 0.55);
+  animation:
+    card-select-burst 600ms var(--ease-soft-out),
+    card-glow 3s var(--ease-soft) 600ms infinite alternate;
+}
+
+@keyframes card-select-burst {
+  0% { transform: scale(1); }
+  45% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
+@keyframes card-glow {
+  from {
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.5) inset,
+      0 8px 22px -10px rgba(230, 196, 192, 0.6),
+      0 0 18px -6px rgba(240, 210, 187, 0.35);
+  }
+  to {
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.65) inset,
+      0 10px 30px -10px rgba(230, 196, 192, 0.85),
+      0 0 38px -6px rgba(240, 210, 187, 0.75);
+  }
+}
+
+/* estado: errado — treme, encolhe e some */
+.quiz-card.is-wrong {
+  pointer-events: none;
+  animation:
+    card-wrong-shake 320ms var(--ease-soft),
+    card-wrong-fade 520ms 320ms var(--ease-in-soft) forwards;
+}
+
+@keyframes card-wrong-shake {
+  0%, 100% { transform: translateX(0) rotate(0); }
+  20% { transform: translateX(-6px) rotate(-1.2deg); }
+  40% { transform: translateX(6px) rotate(1.2deg); }
+  60% { transform: translateX(-4px) rotate(-0.6deg); }
+  80% { transform: translateX(4px) rotate(0.6deg); }
+}
+
+@keyframes card-wrong-fade {
+  to {
+    opacity: 0;
+    transform: scale(0.9) translateY(4px);
+  }
+}
+
+/* fade-out suave dos cards errados que sobraram quando ela completa o quiz */
+.quiz-card.is-fading {
+  pointer-events: none;
+  animation: card-fade-soft 700ms var(--ease-soft) forwards;
+}
+
+@keyframes card-fade-soft {
+  to {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+
+/* ajustes responsivos do quiz */
+@media (max-width: 480px) {
+  .quiz-grid {
+    gap: var(--space-xs);
+  }
+  .quiz-card {
+    width: clamp(110px, 42vw, 150px);
+    font-size: 1rem;
+    padding: 0.85rem 0.7rem;
+  }
+}
+
+/* ============================================================
+   jogo da memória (nível 3)
+   ============================================================ */
+
+.memory-wrap {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.memory-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-sm);
+  width: 100%;
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+@media (max-width: 600px) {
+  .memory-grid {
+    gap: var(--space-xs);
+  }
+}
+
+.memory-card {
+  flex: 0 0 auto;
+  width: clamp(110px, 24vw, 140px);
+
+  position: relative;
+  aspect-ratio: 1;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  perspective: 800px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.memory-card__inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 600ms var(--ease-soft);
+  transform-style: preserve-3d;
+}
+
+.memory-card.is-flipped .memory-card__inner {
+  transform: rotateY(180deg);
+}
+
+.memory-card__face {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius);
+  overflow: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.memory-card__face--back {
+  background: linear-gradient(135deg, var(--color-cream), var(--color-rose) 130%);
+  border: 1px solid rgba(176, 133, 133, 0.3);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.6) inset,
+    0 4px 12px -8px rgba(74, 58, 58, 0.3);
+  transition:
+    transform var(--duration-fast) var(--ease-soft-out),
+    box-shadow var(--duration-base) var(--ease-soft);
+}
+
+.memory-card__face--back svg {
+  width: 38%;
+  height: 38%;
+  opacity: 0.6;
+}
+
+.memory-card:hover:not(.is-flipped):not(.is-matched) .memory-card__face--back {
+  transform: translateY(-3px);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.6) inset,
+    0 8px 20px -8px rgba(176, 133, 133, 0.55);
+}
+
+.memory-card__face--front {
+  transform: rotateY(180deg);
+  background: var(--color-surface);
+  border: 1px solid rgba(176, 133, 133, 0.25);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.5) inset,
+    0 8px 24px -10px rgba(74, 58, 58, 0.35);
+}
+
+.memory-card__face--front img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* carta combinada — fade + scale antes de remover do DOM */
+.memory-card.is-matched .memory-card__inner {
+  animation: memory-card-vanish 800ms var(--ease-soft) 200ms forwards;
+}
+
+@keyframes memory-card-vanish {
+  to {
+    opacity: 0;
+    transform: rotateY(180deg) scale(0.86);
+  }
+}
+
+/* entrada escalonada dos cards de memória — semelhante ao quiz */
+.level--memory .memory-card {
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity var(--duration-base) var(--ease-soft),
+    transform var(--duration-base) var(--ease-soft);
+}
+.level--memory.is-active .memory-card {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: calc(var(--i, 0) * 45ms + 1900ms);
+}
+
+/* ============================================================
+   memory panel — overlay com foto + texto
+   ============================================================ */
+
+.memory-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-md);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--duration-slow) var(--ease-soft);
+}
+
+.memory-panel.is-visible {
+  pointer-events: auto;
+  opacity: 1;
+}
+
+.memory-panel__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(74, 58, 58, 0.45);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+}
+
+.memory-panel__content {
+  position: relative;
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  width: 100%;
+  max-width: 460px;
+  max-height: 92vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.6) inset,
+    0 30px 70px -25px rgba(74, 58, 58, 0.5);
+  transform: scale(0.92) translateY(8px);
+  transition: transform var(--duration-slow) var(--ease-soft-out);
+  cursor: pointer;
+}
+
+.memory-panel.is-visible .memory-panel__content {
+  transform: scale(1) translateY(0);
+}
+
+/* foto: em coluna usa o tamanho intrínseco (capado por max-height),
+   em linha (desktop) ocupa 50% da largura. object-fit: contain sempre. */
+.memory-panel__photo {
+  flex: 0 1 auto;
+  min-height: 0;
+  width: 100%;
+  max-width: 360px;
+  max-height: 58vh;
+  height: auto;
+  border-radius: var(--radius);
+  object-fit: contain;
+  display: block;
+}
+
+.memory-panel__copy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  flex: 0 0 auto;
+  width: 100%;
+}
+
+/* desktop: foto ao lado do texto — usa o espaço horizontal */
+@media (min-width: 760px) {
+  .memory-panel__content {
+    flex-direction: row;
+    max-width: 860px;
+    max-height: 86vh;
+    gap: var(--space-lg);
+    padding: var(--space-lg);
+    align-items: center;
+  }
+
+  .memory-panel__photo {
+    flex: 1 1 50%;
+    max-width: 460px;
+    max-height: calc(86vh - 2 * var(--space-lg));
+    min-width: 0;
+  }
+
+  .memory-panel__copy {
+    flex: 1 1 45%;
+    min-width: 0;
+    justify-content: center;
+  }
+}
+
+.memory-panel__text {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(1.05rem, 2.6vw, 1.25rem);
+  color: var(--color-ink);
+  text-align: center;
+  line-height: 1.6;
+  max-width: 38ch;
+}
+
+.memory-panel__hint {
+  font-family: var(--font-script);
+  font-size: 1rem;
+  color: var(--color-ink-muted);
+  opacity: 0.65;
+  margin-top: var(--space-xs);
+}
+
+/* ============================================================
+   mensagem final do jogo da memória
+   ============================================================ */
+
+.memory-final {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  font-weight: 400;
+  color: var(--color-ink);
+  line-height: 1.5;
+  max-width: 44ch;
+  text-align: center;
+  text-wrap: pretty;
+
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity var(--duration-xslow) var(--ease-soft),
+    transform var(--duration-xslow) var(--ease-soft);
+}
+
+.memory-final.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ============================================================
+   nível 4 — você ou (jogo de escolhas)
+   ============================================================ */
+
+.choose-feedback {
+  font-family: var(--font-script);
+  font-size: clamp(1.3rem, 3.5vw, 1.75rem);
+  color: var(--color-accent);
+  min-height: 2.6em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  pointer-events: none;
+  text-align: center;
+  max-width: 32ch;
+  line-height: 1.25;
+}
+.choose-feedback .choose-feedback__text {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(-6px) scale(0.98);
+  transition:
+    opacity var(--duration-base) var(--ease-soft),
+    transform var(--duration-base) var(--ease-soft);
+}
+.choose-feedback.is-visible .choose-feedback__text {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.choose-feedback.is-final {
+  font-size: clamp(1.8rem, 5.5vw, 2.8rem);
+  height: auto;
+  min-height: 2.4em;
+  margin-top: var(--space-sm);
+  color: var(--color-accent);
+}
+.choose-feedback.is-final .choose-feedback__text {
+  transition:
+    opacity var(--duration-slow) var(--ease-soft),
+    transform var(--duration-slow) var(--ease-soft);
+}
+
+/* arena: 2 cards lado a lado em desktop, empilhados em mobile */
+.choose-arena {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-md);
+  width: 100%;
+}
+
+.choose-vs {
+  font-family: var(--font-script);
+  font-size: clamp(1.5rem, 4vw, 2.1rem);
+  font-weight: 600;
+  color: var(--color-accent);
+  opacity: 0.6;
+  letter-spacing: 0.02em;
+  user-select: none;
+  pointer-events: none;
+  transition:
+    opacity var(--duration-base) var(--ease-soft),
+    transform var(--duration-base) var(--ease-soft);
+}
+
+/* mobile: empilha verticalmente com cards maiores */
+@media (max-width: 600px) {
+  .choose-arena {
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+  .choose-card {
+    width: clamp(180px, 52vw, 280px);
+  }
+}
+
+.choose-card {
+  flex: 0 0 auto;
+  width: clamp(140px, 38vw, 240px);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-sm);
+
+  background: var(--color-surface);
+  border: 1px solid rgba(176, 133, 133, 0.25);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.5) inset,
+    0 8px 24px -12px rgba(74, 58, 58, 0.35);
+  transition:
+    transform var(--duration-fast) var(--ease-soft-out),
+    background var(--duration-base) var(--ease-soft),
+    border-color var(--duration-base) var(--ease-soft),
+    box-shadow var(--duration-base) var(--ease-soft),
+    opacity var(--duration-base) var(--ease-soft);
+}
+
+.choose-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--color-accent);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.6) inset,
+    0 14px 32px -12px rgba(176, 133, 133, 0.55);
+}
+.choose-card:active {
+  transform: translateY(-1px);
+  transition-duration: 80ms;
+}
+.choose-card:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+.choose-card__photo {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: var(--radius);
+  display: block;
+}
+
+.choose-card__label {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(1rem, 2.4vw, 1.2rem);
+  font-weight: 500;
+  color: var(--color-ink);
+  text-align: center;
+  line-height: 1.2;
+}
+
+/* estado: certo — brilha e pulsa */
+.choose-card.is-correct {
+  background: linear-gradient(135deg, var(--color-peach), var(--color-rose));
+  border-color: transparent;
+  pointer-events: none;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.55) inset,
+    0 10px 30px -8px rgba(230, 196, 192, 0.85),
+    0 0 36px -6px rgba(240, 210, 187, 0.7);
+  animation:
+    choose-correct-burst 600ms var(--ease-soft-out),
+    card-glow 3s var(--ease-soft) 600ms infinite alternate;
+}
+
+@keyframes choose-correct-burst {
+  0% { transform: scale(1); }
+  45% { transform: scale(1.06); }
+  100% { transform: scale(1); }
+}
+
+/* estado: errado — chacoalha (volta ao normal pra ela tentar de novo) */
+.choose-card.is-wrong {
+  animation: choose-wrong-shake 360ms var(--ease-soft);
+}
+
+/* estado: hesitação (cristiano round, 1º clique na bia) — só um pulse */
+.choose-card.is-hesitating {
+  animation: choose-hesitate 500ms var(--ease-soft);
+}
+
+@keyframes choose-hesitate {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+}
+
+@keyframes choose-wrong-shake {
+  0%, 100% { transform: translateX(0) rotate(0); }
+  20% { transform: translateX(-8px) rotate(-1.4deg); }
+  40% { transform: translateX(8px) rotate(1.4deg); }
+  60% { transform: translateX(-5px) rotate(-0.7deg); }
+  80% { transform: translateX(5px) rotate(0.7deg); }
+}
+
+/* transições entre rodadas (cards + vs juntos) */
+.choose-arena.is-entering .choose-card,
+.choose-arena.is-entering .choose-vs {
+  opacity: 0;
+  transform: translateY(14px) scale(0.97);
+}
+.choose-arena.is-leaving .choose-card,
+.choose-arena.is-leaving .choose-vs {
+  opacity: 0;
+  transform: translateY(-14px) scale(0.97);
+  pointer-events: none;
+}
