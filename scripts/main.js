@@ -620,7 +620,7 @@
         label: "Jesus",
         biaPositive: "com todo respeito ao nosso Senhor, é claro",
         wrongMessages: [
-          "com todo respeito ao nosso senhor",
+          "com todo respeito ao nosso Senhor",
           "eu digo com todo respeito",
           "eu já fiz muito o trabalho dele",
           "já li muito esse cara aí, mas...",
@@ -665,7 +665,7 @@
       return { msg: arr[idx], idx };
     }
 
-    function showFeedback(message, isFinal = false) {
+    function showFeedback(message, isFinal = false, duration = 1700) {
       if (!feedback) return;
       if (feedbackTimer) {
         window.clearTimeout(feedbackTimer);
@@ -696,7 +696,7 @@
         feedback.classList.add("is-visible");
         feedbackTimer = window.setTimeout(() => {
           feedback.classList.remove("is-visible");
-        }, 1700);
+        }, duration);
       }
     }
 
@@ -785,7 +785,8 @@
         }
 
         // rodada normal: positivo personalizado + próxima rodada
-        showFeedback(alt.biaPositive);
+        // duração da mensagem alinhada com o intervalo da rodada
+        showFeedback(alt.biaPositive, false, 3500);
         window.setTimeout(() => {
           arena.classList.add("is-leaving");
           window.setTimeout(() => {
@@ -794,7 +795,7 @@
             renderRound();
             busy = false;
           }, 600);
-        }, 2200);
+        }, 3500);
       } else {
         // errou (ou clicou na alternativa) — shake + mensagem,
         // usa o array da própria rodada se tiver, senão o default
