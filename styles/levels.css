@@ -126,8 +126,8 @@
   border-radius: var(--radius-lg);
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.6) inset,
-    0 10px 30px -12px rgba(74, 58, 58, 0.35),
-    0 2px 8px -4px rgba(74, 58, 58, 0.2);
+    0 10px 30px -12px rgba(44, 62, 80, 0.35),
+    0 2px 8px -4px rgba(44, 62, 80, 0.2);
   background: var(--color-surface);
   padding: 8px;
   transform: rotate(var(--photo-tilt, 0deg));
@@ -147,13 +147,13 @@
 
 /* card translúcido (uso típico: lista, conteúdo agrupado) */
 .card {
-  background: rgba(255, 248, 243, 0.7);
+  background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(176, 133, 133, 0.18);
+  border: 1px solid rgba(108, 155, 200, 0.18);
   border-radius: var(--radius-lg);
   padding: var(--space-md);
-  box-shadow: 0 8px 24px -16px rgba(74, 58, 58, 0.35);
+  box-shadow: 0 8px 24px -16px rgba(44, 62, 80, 0.35);
 }
 
 /* divisor ornamental (florzinha entre seções) */
@@ -247,17 +247,17 @@
   padding: 0.95rem 1.1rem;
   min-height: 52px;
 
-  background: rgba(255, 248, 243, 0.72);
+  background: rgba(255, 255, 255, 0.72);
   -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
-  border: 1px solid rgba(176, 133, 133, 0.25);
+  border: 1px solid rgba(108, 155, 200, 0.25);
   border-radius: var(--radius);
 
   cursor: pointer;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
 
-  box-shadow: 0 2px 10px -8px rgba(74, 58, 58, 0.3);
+  box-shadow: 0 2px 10px -8px rgba(44, 62, 80, 0.3);
   transition:
     transform var(--duration-fast) var(--ease-soft-out),
     background var(--duration-base) var(--ease-soft),
@@ -270,7 +270,7 @@
   transform: translateY(-2px);
   border-color: var(--color-accent);
   background: var(--color-cream);
-  box-shadow: 0 8px 20px -10px rgba(176, 133, 133, 0.5);
+  box-shadow: 0 8px 20px -10px rgba(108, 155, 200, 0.5);
 }
 .quiz-card:active {
   transform: translateY(0);
@@ -310,8 +310,8 @@
   pointer-events: none;
   box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.55) inset,
-    0 8px 26px -10px rgba(230, 196, 192, 0.7),
-    0 0 26px -6px rgba(240, 210, 187, 0.55);
+    0 8px 26px -10px rgba(192, 213, 232, 0.7),
+    0 0 26px -6px rgba(214, 228, 240, 0.55);
   animation:
     card-select-burst 600ms var(--ease-soft-out),
     card-glow 3s var(--ease-soft) 600ms infinite alternate;
@@ -327,14 +327,14 @@
   from {
     box-shadow:
       0 0 0 1px rgba(255, 255, 255, 0.5) inset,
-      0 8px 22px -10px rgba(230, 196, 192, 0.6),
-      0 0 18px -6px rgba(240, 210, 187, 0.35);
+      0 8px 22px -10px rgba(192, 213, 232, 0.6),
+      0 0 18px -6px rgba(214, 228, 240, 0.35);
   }
   to {
     box-shadow:
       0 0 0 1px rgba(255, 255, 255, 0.65) inset,
-      0 10px 30px -10px rgba(230, 196, 192, 0.85),
-      0 0 38px -6px rgba(240, 210, 187, 0.75);
+      0 10px 30px -10px rgba(192, 213, 232, 0.85),
+      0 0 38px -6px rgba(214, 228, 240, 0.75);
   }
 }
 
@@ -454,10 +454,10 @@
 
 .memory-card__face--back {
   background: linear-gradient(135deg, var(--color-cream), var(--color-rose) 130%);
-  border: 1px solid rgba(176, 133, 133, 0.3);
+  border: 1px solid rgba(108, 155, 200, 0.3);
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.6) inset,
-    0 4px 12px -8px rgba(74, 58, 58, 0.3);
+    0 4px 12px -8px rgba(44, 62, 80, 0.3);
   transition:
     transform var(--duration-fast) var(--ease-soft-out),
     box-shadow var(--duration-base) var(--ease-soft);
@@ -473,16 +473,16 @@
   transform: translateY(-3px);
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.6) inset,
-    0 8px 20px -8px rgba(176, 133, 133, 0.55);
+    0 8px 20px -8px rgba(108, 155, 200, 0.55);
 }
 
 .memory-card__face--front {
   transform: rotateY(180deg);
   background: var(--color-surface);
-  border: 1px solid rgba(176, 133, 133, 0.25);
+  border: 1px solid rgba(108, 155, 200, 0.25);
   box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.5) inset,
-    0 8px 24px -10px rgba(74, 58, 58, 0.35);
+    0 8px 24px -10px rgba(44, 62, 80, 0.35);
 }
 
 .memory-card__face--front img {
@@ -543,7 +543,7 @@
 .memory-panel__backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(74, 58, 58, 0.45);
+  background: rgba(44, 62, 80, 0.45);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   cursor: pointer;
@@ -564,7 +564,7 @@
   gap: var(--space-sm);
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.6) inset,
-    0 30px 70px -25px rgba(74, 58, 58, 0.5);
+    0 30px 70px -25px rgba(44, 62, 80, 0.5);
   transform: scale(0.92) translateY(8px);
   transition: transform var(--duration-slow) var(--ease-soft-out);
   cursor: pointer;
@@ -755,7 +755,7 @@
   padding: var(--space-sm);
 
   background: var(--color-surface);
-  border: 1px solid rgba(176, 133, 133, 0.25);
+  border: 1px solid rgba(108, 155, 200, 0.25);
   border-radius: var(--radius-lg);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
@@ -763,7 +763,7 @@
 
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.5) inset,
-    0 8px 24px -12px rgba(74, 58, 58, 0.35);
+    0 8px 24px -12px rgba(44, 62, 80, 0.35);
   transition:
     transform var(--duration-fast) var(--ease-soft-out),
     background var(--duration-base) var(--ease-soft),
@@ -777,7 +777,7 @@
   border-color: var(--color-accent);
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.6) inset,
-    0 14px 32px -12px rgba(176, 133, 133, 0.55);
+    0 14px 32px -12px rgba(108, 155, 200, 0.55);
 }
 .choose-card:active {
   transform: translateY(-1px);
@@ -813,8 +813,8 @@
   pointer-events: none;
   box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.55) inset,
-    0 10px 30px -8px rgba(230, 196, 192, 0.85),
-    0 0 36px -6px rgba(240, 210, 187, 0.7);
+    0 10px 30px -8px rgba(192, 213, 232, 0.85),
+    0 0 36px -6px rgba(214, 228, 240, 0.7);
   animation:
     choose-correct-burst 600ms var(--ease-soft-out),
     card-glow 3s var(--ease-soft) 600ms infinite alternate;
@@ -860,4 +860,123 @@
   opacity: 0;
   transform: translateY(-14px) scale(0.97);
   pointer-events: none;
+}
+
+/* ============================================================
+   nível 5 — mensagem cinematográfica
+   ============================================================ */
+.level__final-text {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(1.4rem, 4vw, 2.1rem);
+  font-weight: 400;
+  color: var(--color-ink);
+  line-height: 1.55;
+  text-align: center;
+  max-width: 28ch;
+  text-wrap: pretty;
+}
+
+.level--message .level__inner {
+  /* dá mais ar ao texto solo, sem header acima */
+  padding-top: clamp(2rem, 8vh, 6rem);
+}
+
+/* ============================================================
+   nível 6 — cachorrinho final
+   ============================================================ */
+
+.level--dog .level__inner {
+  padding-top: clamp(2rem, 6vh, 4rem);
+  gap: var(--space-lg);
+}
+
+.dog-stage {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.dog {
+  width: clamp(240px, 55vw, 380px);
+  height: auto;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 250ms var(--ease-soft-out);
+  filter: drop-shadow(0 6px 12px rgba(44, 62, 80, 0.12));
+
+  /* entrada — sobe de baixo com bounce */
+  animation: dog-enter 900ms var(--ease-soft-out) both;
+}
+
+@keyframes dog-enter {
+  0% { opacity: 0; transform: translateY(50px) scale(0.8); }
+  60% { opacity: 1; transform: translateY(-8px) scale(1.03); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.dog:hover {
+  transform: translateY(-4px) scale(1.02);
+}
+
+.dog.is-clicked {
+  animation: dog-bounce 320ms var(--ease-soft-out);
+}
+
+@keyframes dog-bounce {
+  0%, 100% { transform: scale(1); }
+  40% { transform: scale(0.93); }
+  70% { transform: scale(1.05); }
+}
+
+/* container das mensagens flutuantes (sobrepõe o cachorro) */
+.bark-messages {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.bark-message {
+  position: absolute;
+  font-family: var(--font-script);
+  font-size: clamp(1.5rem, 3.8vw, 2.3rem);
+  font-weight: 500;
+  color: var(--color-accent);
+  pointer-events: none;
+  white-space: nowrap;
+  transform: translate(-50%, 0);
+  text-shadow: 0 2px 8px rgba(255, 255, 255, 0.6);
+  animation: bark-float 1.8s var(--ease-soft-out) forwards;
+}
+
+@keyframes bark-float {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 10px) scale(0.7);
+  }
+  18% {
+    opacity: 1;
+    transform: translate(-50%, -10px) scale(1.05);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -100px) scale(1.1);
+  }
+}
+
+/* dica "faz carinho nele" — some depois do primeiro clique */
+.dog-hint {
+  font-family: var(--font-script);
+  font-size: clamp(1.2rem, 3vw, 1.5rem);
+  color: var(--color-ink-muted);
+  opacity: 0.7;
+  margin: 0;
+  transition: opacity var(--duration-slow) var(--ease-soft);
+}
+.dog-hint.is-hidden {
+  opacity: 0;
 }

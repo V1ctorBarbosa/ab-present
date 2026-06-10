@@ -2,25 +2,25 @@
    tokens
    ============================================================ */
 :root {
-  /* paleta pastel — todos dessaturados */
-  --color-bg: #f7eee8;
-  --color-bg-soft: #fdf6f1;
-  --color-surface: #fff8f3;
-  --color-lavender: #d8c9e0;
-  --color-rose: #e6c4c0;
-  --color-peach: #f0d2bb;
-  --color-sage: #c4d4c0;
-  --color-cream: #f4e7e0;
+  /* paleta — azul-bebê + branco */
+  --color-bg: #f4f8fc;
+  --color-bg-soft: #fafcfe;
+  --color-surface: #ffffff;
+  --color-lavender: #d6e4f0;
+  --color-rose: #c0d5e8;
+  --color-peach: #e3edf6;
+  --color-sage: #ccdde9;
+  --color-cream: #ebf2f8;
 
-  /* tinta */
-  --color-ink: #4a3a3a;
-  --color-ink-soft: #6b5959;
-  --color-ink-muted: #8a7676;
-  --color-accent: #b08585;
+  /* tinta — azul-cinza pra texto */
+  --color-ink: #2c3e50;
+  --color-ink-soft: #5a728a;
+  --color-ink-muted: #8aa0b5;
+  --color-accent: #6c9bc8;
 
-  /* tipografia */
-  --font-serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;
-  --font-script: "Caveat", "Brush Script MT", cursive;
+  /* tipografia — Roboto */
+  --font-serif: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --font-script: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
 
   /* espaçamentos */
   --space-2xs: 0.25rem;
@@ -224,7 +224,7 @@ body {
 
   padding: 0.85rem 2rem;
   border-radius: var(--radius-pill);
-  border: 1px solid rgba(176, 133, 133, 0.35);
+  border: 1px solid rgba(108, 155, 200, 0.35);
   background: var(--color-surface);
 
   cursor: pointer;
@@ -234,8 +234,8 @@ body {
   -webkit-tap-highlight-color: transparent;
 
   box-shadow:
-    0 1px 0 rgba(176, 133, 133, 0.12),
-    0 6px 18px -10px rgba(176, 133, 133, 0.45);
+    0 1px 0 rgba(108, 155, 200, 0.12),
+    0 6px 18px -10px rgba(108, 155, 200, 0.45);
   transition:
     transform var(--duration-fast) var(--ease-soft-out),
     background var(--duration-base) var(--ease-soft),
@@ -264,16 +264,16 @@ body {
   border-color: var(--color-accent);
   background: var(--color-cream);
   box-shadow:
-    0 3px 0 rgba(176, 133, 133, 0.15),
-    0 14px 28px -10px rgba(176, 133, 133, 0.5);
+    0 3px 0 rgba(108, 155, 200, 0.15),
+    0 14px 28px -10px rgba(108, 155, 200, 0.5);
 }
 .btn:hover::before { opacity: 1; }
 
 .btn:active {
   transform: translateY(0);
   box-shadow:
-    0 1px 0 rgba(176, 133, 133, 0.15),
-    0 3px 10px -6px rgba(176, 133, 133, 0.4);
+    0 1px 0 rgba(108, 155, 200, 0.15),
+    0 3px 10px -6px rgba(108, 155, 200, 0.4);
   transition-duration: 80ms;
 }
 

@@ -22,6 +22,7 @@
 
   let currentIndex = 0;
   let isTransitioning = false;
+  let autoAdvanceTimer = null;
 
   // estado inicial: o primeiro nível está ativo
   levels[0].classList.add("is-active");
@@ -92,18 +93,43 @@
     current.classList.remove("is-active");
     current.classList.add("is-exiting");
 
+    // cancela qualquer auto-advance pendente da tela anterior
+    if (autoAdvanceTimer) {
+      window.clearTimeout(autoAdvanceTimer);
+      autoAdvanceTimer = null;
+    }
+
     // depois que a saída termina, entra no próximo
     window.setTimeout(() => {
       current.classList.remove("is-exiting");
       target.classList.add("is-active");
       handleMusic(target);
       currentIndex = targetIndex;
+      scheduleAutoAdvance(target);
 
       // pequena folga pra desbloquear cliques
       window.setTimeout(() => {
         isTransitioning = false;
       }, 80);
     }, EXIT_DURATION_MS);
+  }
+
+  /**
+   * se o nível tiver data-auto-advance="<ms>", agenda um avanço
+   * automático depois de <ms>. cancelado se a usuária navegar antes.
+   */
+  function scheduleAutoAdvance(level) {
+    const raw = level.dataset.autoAdvance;
+    if (!raw) return;
+    const ms = Number.parseInt(raw, 10);
+    if (Number.isNaN(ms) || ms <= 0) return;
+
+    const scheduledFor = currentIndex;
+    autoAdvanceTimer = window.setTimeout(() => {
+      if (currentIndex === scheduledFor) {
+        goToLevel(currentIndex + 1);
+      }
+    }, ms);
   }
 
   /**
@@ -208,7 +234,7 @@
     ];
 
     // mensagem final, quando todos os certos estão marcados
-    const finalMessage = "você é tudo isso aí mesmo";
+    const finalMessage = "voc eh isso ai mozinho";
 
     // embaralha os cards de forma estável (Fisher-Yates) e move no DOM
     const order = Array.from(grid.children);
@@ -369,7 +395,7 @@
       {
         id: 1,
         photo: "assets/photos/game-01.jpg",
-        text: "Praia do sossego. A gente tinha tido uma conversa longa e difícil uma noite antes, mas foi bom estar com você em lugar mais leve e rindo e se sentindo bem. Sempre é bom estar com você, sempre",
+        text: "Praia do sossego. A gente tinha tido uma conversa longa e difícil uma noite antes, mas foi bom estar com você em lugar mais leve, rindo e se sentindo bem. Sempre é bom estar com você. Sempre",
       },
       {
         id: 2,
@@ -389,12 +415,12 @@
       {
         id: 5,
         photo: "assets/photos/game-05.jpg",
-        text: "Eu sempre fico com um pouco de FOMO quando você me mostra tudo que já viveu e os lugares incríveis onde esteve, principalmente em fotos assim. Então fico muito feliz de estar presente, pelo menos em uma foto dessas, em um momento tão especial desses",
+        text: "Eu sempre fico com um pouco de FOMO quando você me mostra tudo que já viveu e os lugares incríveis onde esteve, principalmente em fotos assim. Então fico muito feliz de estar presente em pelo menos um momento assim",
       },
       {
         id: 6,
         photo: "assets/photos/game-06.jpg",
-        text: "Isso foi na cabana que a Taylor gravou o Folklore. Eu estava tentando escovar os dentes e você não parava de me agarrar. Eu sempre adorei isso (e nós estamos sem roupa nessa foto aí...)",
+        text: "Isso foi na cabana que a Taylor gravou o Folklore. Foi coisa de filme. Eu estava tentando escovar os dentes e você não parava de me agarrar. Eu sempre adorei isso (e nós estamos sem roupa nessa foto aí...)",
       },
     ];
 
@@ -595,13 +621,13 @@
         ],
       },
       {
-        photo: "assets/photos/harry.jpg",
-        label: "Harry Styles",
-        biaPositive: "eu gosto dele, mas o que eu gosto mais de você é brincadeira",
+        photo: "assets/photos/sabrina.jpg",
+        label: "Sabrina",
+        biaPositive: "eu gosto dela, mas o que eu gosto mais de você é brincadeira",
         wrongMessages: [
-          "to ansioso pro show, mas nem tanto",
-          "ok, ele é bonitinho, mas pera aí",
-          "o homi sabe, mas pensa bem",
+          "aquele coachella foi legal, mas nem tanto",
+          "ok, ele é bonitinha, mas pera aí",
+          "ela sabe, mas pensa bem",
           "ouço direto, mas calma lá",
         ],
       },
@@ -813,4 +839,72 @@
   }
 
   initChooseGame();
+
+  /* ============================================================
+     nível 6 — cachorrinho final
+     ============================================================
+     Clica nele → toca um latido + mensagem fofa flutua a partir
+     do ponto do clique e desaparece. Sem fim — ela pode brincar
+     o quanto quiser.
+     ============================================================ */
+  function initDog() {
+    const dog = document.getElementById("dog");
+    if (!dog) return;
+    const messagesEl = document.getElementById("bark-messages");
+    const hint = document.getElementById("dog-hint");
+    const bark = document.getElementById("bark-audio");
+
+    const barkText = "au au au au";
+    let hintHidden = false;
+
+    function playBark() {
+      if (!bark) return;
+      try {
+        bark.currentTime = 0;
+        const p = bark.play();
+        if (p && typeof p.catch === "function") {
+          p.catch(() => {
+            /* arquivo ausente ou autoplay bloqueado — silêncio */
+          });
+        }
+      } catch (e) {
+        /* idem */
+      }
+    }
+
+    function spawnMessage(x, y) {
+      if (!messagesEl) return;
+      const msg = document.createElement("span");
+      msg.className = "bark-message";
+      msg.textContent = barkText;
+      msg.style.left = `${x}px`;
+      msg.style.top = `${y}px`;
+      messagesEl.appendChild(msg);
+      window.setTimeout(() => msg.remove(), 1850);
+    }
+
+    dog.addEventListener("click", (event) => {
+      // bounce do cachorro
+      dog.classList.remove("is-clicked");
+      // force reflow pra a animação re-disparar em cliques rápidos
+      void dog.offsetWidth;
+      dog.classList.add("is-clicked");
+
+      // posição da mensagem: relativa ao container .bark-messages
+      const containerRect = messagesEl.getBoundingClientRect();
+      const x = event.clientX - containerRect.left;
+      const y = event.clientY - containerRect.top;
+      spawnMessage(x, y);
+
+      playBark();
+
+      // esconde a dica depois do primeiro clique
+      if (!hintHidden && hint) {
+        hint.classList.add("is-hidden");
+        hintHidden = true;
+      }
+    });
+  }
+
+  initDog();
 })();
