@@ -600,7 +600,7 @@
       {
         photo: "assets/photos/cat.jpg",
         label: "gatinho",
-        biaPositive: "entre um gato e a minha gatinha, claro que escolho você",
+        biaPositive: "entre um gato e a minha gatinha, glaro q eu excolho vosse mozinho",
         wrongMessages: [
           "eles são fofos, mas pensa legal",
           "muito bonitinhos, mas calma",
@@ -612,7 +612,7 @@
       {
         photo: "assets/photos/hot-shower.jpg",
         label: "banho quente",
-        biaPositive: "eu só gosto de banho quente com você, claro que te escolho",
+        biaPositive: "eu só soh tomo bainho quente com vosse mozinho, glaro q eh vc",
         wrongMessages: [
           "é relaxante, mas calma",
           "eu aprendi a gostar, mas pera aí",
@@ -623,7 +623,7 @@
       {
         photo: "assets/photos/sabrina.jpg",
         label: "Sabrina",
-        biaPositive: "eu gosto dela, mas o que eu gosto mais de você é brincadeira",
+        biaPositive: "ela eh maneira mas eu goxto bem mais d vosse mozinho",
         wrongMessages: [
           "aquele coachella foi legal, mas nem tanto",
           "ok, ele é bonitinha, mas pera aí",
@@ -634,7 +634,7 @@
       {
         photo: "assets/photos/cookies.jpg",
         label: "um monte de cookies",
-        biaPositive: "você é muito mais saborosa que qualquer cookie",
+        biaPositive: "vosse eh o verdadeiro cookie hmmmmm saborosa",
         wrongMessages: [
           "ookie cookie é bom, mas vê legal",
           "pensa uma, duas, até três vezes",
